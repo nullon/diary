@@ -19,12 +19,7 @@ $query = '
 $PDO->query($query);
 
 if($_GET["p"] == "new"){
-    $prepare = "INSERT INTO diary VALUE (0,:date,:text);";
-    $stmt = $PDO->prepare($prepare);
-    $stmt->bindParam(":date",$_POST["date"]);
-    $stmt->bindParam(":text",$_POST["text"]);
-    if($stmt->execute()){echo "日記を書き込みました。";}
-    else{echo "日記の書き込みに失敗しました。";}
+    if($_POST){echo insert_post($_POST);}
 }
 else{
     $query = "SELECT * FROM diary ORDER BY date DESC;";
@@ -41,3 +36,15 @@ else{
     <textarea name="text"></textarea>
     <input type="submit" value="送信" />
 </form>
+
+<?php
+
+function insert_post($arr){
+    global $PDO;
+    $prepare = "INSERT INTO diary VALUE (0,:date,:text);";
+    $stmt = $PDO->prepare($prepare);
+    $stmt->bindParam(":date",$arr["date"]);
+    $stmt->bindParam(":text",$arr["text"]);
+    if($stmt->execute()){return "日記を書き込みました。";}
+    else{return "日記の書き込みに失敗しました。";}
+}
